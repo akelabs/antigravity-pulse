@@ -1,13 +1,23 @@
-# Antigravity 能量胶囊（Antigravity Pulse）
+<p align="center">
+  <img src="assets/01-hero.png" alt="Antigravity 能量胶囊：Turbo 旁实时显示 tok/s 与上下文容量" width="100%">
+</p>
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+<h1 align="center">Antigravity 能量胶囊</h1>
 
-**专为 Google Antigravity 2.0 打造的原生级底部工具栏实时监控组件。**  
-在对话框底部「极速（`Turbo`）」按钮正左侧，原生呈现 **实时生成速度（`⚡ tok/s`）**、**3A 冷雾莫兰迪跑道容量胶囊**、**Prompt 缓存命中率** 与 **5 小时剩余额度重置倒计时**。
+<p align="center"><b>专为 Google Antigravity 2.0 打造的原生底部栏实时监控。</b><br>在「极速（<code>Turbo</code>）」按钮旁实时显示 <code>tok/s</code>、上下文容量胶囊、Prompt 缓存命中率和 5 小时额度重置倒计时。</p>
 
-![Antigravity 能量胶囊：Turbo 旁实时显示 tok/s 与上下文容量](assets/01-hero.png)
+<p align="center">
+  <a href="https://github.com/akelabs/antigravity-pulse/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/akelabs/antigravity-pulse?style=flat-square&label=release&labelColor=0B0B0F&color=3B82F6"></a>
+  <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%20%7C%20Web-0B0B0F?style=flat-square&labelColor=0B0B0F&color=5E9E8E">
+  <img alt="Node.js 18+" src="https://img.shields.io/badge/Node.js-18%2B-0B0B0F?style=flat-square&labelColor=0B0B0F&color=C6A265">
+  <img alt="Zero dependencies" src="https://img.shields.io/badge/dependencies-0-0B0B0F?style=flat-square&labelColor=0B0B0F&color=C26C77">
+</p>
 
-![Antigravity 能量胶囊演示](assets/demo-preview.gif)
+<p align="center"><a href="#快速安装"><b>快速安装</b></a> · <a href="#核心特性"><b>核心特性</b></a> · <a href="#隐私与安全说明"><b>隐私与安全</b></a> · <a href="https://github.com/akelabs/antigravity-pulse/releases/latest"><b>下载</b></a><br><sub><a href="README.md">English</a> · <a href="README.zh-CN.md">简体中文</a></sub></p>
+
+<p align="center">
+  <img src="assets/demo-preview.gif" alt="Antigravity 能量胶囊演示" width="88%">
+</p>
 
 ---
 
@@ -20,9 +30,12 @@
 - **精准 5 小时额度倒计时与压缩感知**：完整解析 Protobuf `Timestamp` 与共享配额池重置时间（如 `2h 40m 后重置`），内置 `> 5,000` Tokens 自动压缩检测（支持撤回消息 Undo 免疫）及 `>= 85%` 临界归档提醒。
 - **点击胶囊秒切中英双语**：首次使用自动跟随系统语言；之后轻点胶囊即可在 `中文` 与 `English` 间即时切换并记住选择，内置防回译标记，与客户端汉化环境完美兼容。
 
-![悬停即看全部指标](assets/02-popover.png)
-
-![胶囊随容量变色，压缩前心里有数](assets/03-capsule-states.png)
+<table>
+  <tr>
+    <td width="50%" align="center"><img src="assets/02-popover.png" alt="悬停即看全部指标"><br><sub>悬停即看全部指标</sub></td>
+    <td width="50%" align="center"><img src="assets/03-capsule-states.png" alt="胶囊随容量变色，压缩前心里有数"><br><sub>胶囊随容量变色，压缩前心里有数</sub></td>
+  </tr>
+</table>
 
 ---
 
@@ -93,3 +106,5 @@ $s = "$env:TEMP\agy-pulse-setup.ps1"; Invoke-WebRequest "https://github.com/akel
 ## 许可说明
 
 Copyright © 2026 Antigravity Pulse Authors. 发布包免费供个人与开发者日常使用。
+
+Antigravity 能量胶囊是独立的社区项目，与 Google 没有关联，也未获 Google 认可。

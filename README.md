@@ -1,13 +1,23 @@
-# Antigravity Pulse
+<p align="center">
+  <img src="assets/01-hero.png" alt="Antigravity Pulse: live tok/s and context capacity beside Turbo" width="100%">
+</p>
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+<h1 align="center">Antigravity Pulse</h1>
 
-**Native composer-bar telemetry for Google Antigravity 2.0.**  
-Real-time generation speed (`tok/s`), a 3A Morandi runway capacity capsule, prompt cache hit ratio, and 5-hour quota reset countdown — seamlessly anchored right next to the native `Turbo` selector.
+<p align="center"><b>Native composer-bar telemetry for Google Antigravity 2.0.</b><br>Live <code>tok/s</code>, a context-capacity capsule, prompt cache hit ratio and the 5-hour quota countdown, right beside <code>Turbo</code>.</p>
 
-![Antigravity Pulse: live tok/s and context capacity beside Turbo](assets/01-hero.png)
+<p align="center">
+  <a href="https://github.com/akelabs/antigravity-pulse/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/akelabs/antigravity-pulse?style=flat-square&label=release&labelColor=0B0B0F&color=3B82F6"></a>
+  <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%20%7C%20Web-0B0B0F?style=flat-square&labelColor=0B0B0F&color=5E9E8E">
+  <img alt="Node.js 18+" src="https://img.shields.io/badge/Node.js-18%2B-0B0B0F?style=flat-square&labelColor=0B0B0F&color=C6A265">
+  <img alt="Zero dependencies" src="https://img.shields.io/badge/dependencies-0-0B0B0F?style=flat-square&labelColor=0B0B0F&color=C26C77">
+</p>
 
-![Antigravity Pulse demo](assets/demo-preview.gif)
+<p align="center"><a href="#quick-start"><b>Quick Start</b></a> · <a href="#why-antigravity-pulse"><b>Features</b></a> · <a href="#privacy--security"><b>Privacy</b></a> · <a href="https://github.com/akelabs/antigravity-pulse/releases/latest"><b>Download</b></a><br><sub><a href="README.md">English</a> · <a href="README.zh-CN.md">简体中文</a></sub></p>
+
+<p align="center">
+  <img src="assets/demo-preview.gif" alt="Antigravity Pulse demo" width="88%">
+</p>
 
 ---
 
@@ -26,9 +36,12 @@ Existing context monitors sit in the legacy bottom status bar as plain text and 
 - **Near-Compaction Warning**: When context usage reaches `>= 85%`, the popover shows a quiet warning that automatic compaction is about to kick in.
 - **1-Click `EN` ⇄ `中文` Toggle**: Follows your system language on first run, and a click on the capsule switches popover language anytime (your choice is remembered).
 
-![Every number, one hover away](assets/02-popover.png)
-
-![Know before it compacts](assets/03-capsule-states.png)
+<table>
+  <tr>
+    <td width="50%" align="center"><img src="assets/02-popover.png" alt="Every number, one hover away"><br><sub>Every number, one hover away</sub></td>
+    <td width="50%" align="center"><img src="assets/03-capsule-states.png" alt="Know before it compacts"><br><sub>Know before it compacts</sub></td>
+  </tr>
+</table>
 
 ---
 
@@ -99,3 +112,5 @@ In the browser, remove the extension from `chrome://extensions/` (or `edge://ext
 ## License
 
 Copyright © 2026 Antigravity Pulse Authors. Release files are provided free for personal and developer use.
+
+Antigravity Pulse is an independent community project and is not affiliated with or endorsed by Google.
