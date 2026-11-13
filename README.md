@@ -49,20 +49,20 @@ Existing context monitors sit in the legacy bottom status bar as plain text and 
 
 ### 1. Desktop Client (Windows)
 
-**One-line setup (recommended)**: open PowerShell and paste this line. It downloads `setup.ps1`, which checks for [Node.js](https://nodejs.org/) 18+ (and offers to install the LTS version with `winget` if it is missing), fetches the latest `install-context-capsule.js` and `context-capsule-payload.js` into `%USERPROFILE%\.gemini\tools\`, then patches `app.asar` in ~20ms and restarts Antigravity cleanly:
+**One-line setup (recommended)**: open PowerShell and paste this line. It downloads `setup.ps1`, which checks for [Node.js](https://nodejs.org/) 18+ (and offers to install the LTS version with `winget` if it is missing), fetches the latest `install-context-capsule.js` and `context-capsule-payload.js` into `%USERPROFILE%\.gemini\tools\`, backs up the original `app.asar`, patches `app.asar` atomically in ~20ms, and restarts Antigravity cleanly:
 
 ```powershell
-$s = "$env:TEMP\agy-pulse-setup.ps1"; Invoke-WebRequest "https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.ps1" -OutFile $s -UseBasicParsing; powershell -NoProfile -ExecutionPolicy Bypass -File $s
+$s = "$env:TEMP\agy-pulse-setup.ps1"; Invoke-WebRequest "https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.ps1" -OutFile $s -UseBasicParsing; powershell -NoProfile -ExecutionPolicy Bypass -File "$s"; Remove-Item $s -ErrorAction SilentlyContinue
 ```
 
-> Antigravity restarts during setup, so save your work first. If you are connected through remote desktop, the connection will drop.
+> Antigravity restarts automatically during setup (append `-Confirm` if you prefer an interactive prompt before closing it), so save your work first. If you are connected through remote desktop, the connection will drop only if you run inside an Antigravity terminal.
 
-Prefer clicking? Download `setup.ps1`, `setup.cmd`, `install-context-capsule.js` and `context-capsule-payload.js` from **[Releases](../../releases)** into one folder and double-click `setup.cmd` (add `-Offline` to `setup.ps1` to use those local files without downloading).
+Prefer clicking or offline install? Download `setup.ps1`, `setup.cmd`, `install-context-capsule.js`, and `context-capsule-payload.js` from **[Releases](../../releases)** into one folder and double-click `setup.cmd` (it automatically detects the local `.js` files and installs offline without re-downloading).
 
-Check status in `< 5ms` (useful after silent Antigravity client updates). Run the same line with `-Action check` at the end:
+Check status in `< 5ms` (useful after silent Antigravity client updates — re-run the install command anytime an official update overwrites `app.asar`):
 
 ```powershell
-$s = "$env:TEMP\agy-pulse-setup.ps1"; Invoke-WebRequest "https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.ps1" -OutFile $s -UseBasicParsing; powershell -NoProfile -ExecutionPolicy Bypass -File $s -Action check
+$s = "$env:TEMP\agy-pulse-setup.ps1"; Invoke-WebRequest "https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.ps1" -OutFile $s -UseBasicParsing; powershell -NoProfile -ExecutionPolicy Bypass -File "$s" -Action check; Remove-Item $s -ErrorAction SilentlyContinue
 ```
 
 <details>
@@ -73,7 +73,7 @@ $s = "$env:TEMP\agy-pulse-setup.ps1"; Invoke-WebRequest "https://github.com/akel
 3. Run:
 
 ```powershell
-node "$HOME\.gemini\tools\install-context-capsule.js"            # install or update
+node "$HOME\.gemini\tools\install-context-capsule.js"            # install or update (add --confirm to prompt before restart)
 node "$HOME\.gemini\tools\install-context-capsule.js" --check    # status
 ```
 
@@ -81,21 +81,21 @@ node "$HOME\.gemini\tools\install-context-capsule.js" --check    # status
 
 ### 2. Desktop Client (macOS — Apple Silicon: M1 / M2 / M3 / M4 · ARM64)
 
-**One-line setup (recommended)**: open Terminal and paste this line. If your shell is running under Rosetta 2, it automatically switches back to native `arm64`, prioritizes `/opt/homebrew/bin` for [Node.js](https://nodejs.org/) 18+ (offering to install LTS with Homebrew if missing), downloads `install-context-capsule.js` and `context-capsule-payload.js` into `~/.gemini/tools/`, verifies Apple Silicon architecture compatibility, patches `Antigravity.app` in memory in ~20ms, updates `ElectronAsarIntegrity` in `Contents/Info.plist`, clears stale caches, performs local ARM64 ad-hoc re-signing (`codesign`), and restarts Antigravity cleanly:
+**One-line setup (recommended)**: open Terminal and paste this line. If your shell is running under Rosetta 2, it automatically switches back to native `arm64`, prioritizes `/opt/homebrew/bin` for [Node.js](https://nodejs.org/) 18+ (offering to install LTS with Homebrew if missing), downloads `install-context-capsule.js` and `context-capsule-payload.js` into `~/.gemini/tools/`, verifies Apple Silicon architecture compatibility, backs up the original `app.asar` and `Info.plist`, patches `Antigravity.app` atomically in ~20ms, updates `ElectronAsarIntegrity`, clears stale caches, performs local ARM64 ad-hoc re-signing (`codesign`), and restarts Antigravity cleanly:
 
 ```bash
-curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch arm64
+s="$(mktemp -t agy-pulse.XXXXXX)" && curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o "$s" && bash "$s" --arch arm64; rm -f "$s"
 ```
 
-> If `/Applications/Antigravity.app` requires administrator write permission, Terminal will prompt for your macOS login password (`sudo`). For routine payload updates later, press `Cmd+Shift+P` and run `Developer: Reload Window` to hot-reload in ~1 second without restarting the app.
+> If `/Applications/Antigravity.app` requires administrator write permission, Terminal will prompt for your macOS login password (`sudo`). Append `--confirm` if you want a confirmation prompt before closing Antigravity. For routine payload updates later, press `Cmd+Shift+P` and run `Developer: Reload Window` to hot-reload in ~1 second without restarting the app.
 
 Check status in `< 5ms` (useful after silent Antigravity client updates):
 
 ```bash
-curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch arm64 --check
+s="$(mktemp -t agy-pulse.XXXXXX)" && curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o "$s" && bash "$s" --arch arm64 --check; rm -f "$s"
 ```
 
-Prefer clicking or offline install? Download `setup.command`, `setup.sh`, `install-context-capsule.js`, and `context-capsule-payload.js` from **[Releases](../../releases)** into one folder and double-click `setup.command` (it auto-detects chip architecture; on first launch, if macOS shows an unsigned-script warning, run `chmod +x setup.command` then right-click **Open** or allow it in System Settings, or run `bash setup.sh --offline --arch arm64` in Terminal).
+Prefer offline or double-click install? Download `setup.command`, `setup.sh`, `install-context-capsule.js`, and `context-capsule-payload.js` from **[Releases](../../releases)** into one folder. Because browser-downloaded scripts do not carry macOS executable permissions by default, run `chmod +x setup.command setup.sh && xattr -c setup.command setup.sh` once in Terminal to enable double-clicking `setup.command` (or simply run `bash setup.sh --offline --arch arm64` directly in Terminal).
 
 <details>
 <summary>Manual setup (if you'd rather not run the script)</summary>
@@ -113,21 +113,21 @@ node ~/.gemini/tools/install-context-capsule.js --arch arm64 --check    # status
 
 ### 3. Desktop Client (macOS — Intel x86_64)
 
-**One-line setup (recommended)**: open Terminal and paste this line. It prioritizes `/usr/local/bin` for [Node.js](https://nodejs.org/) 18+ (offering to install LTS with Homebrew if missing), downloads `install-context-capsule.js` and `context-capsule-payload.js` into `~/.gemini/tools/`, verifies Intel architecture compatibility, patches `Antigravity.app` in memory in ~20ms, updates `ElectronAsarIntegrity` in `Contents/Info.plist`, clears stale caches, performs local ad-hoc re-signing (`codesign`), and restarts Antigravity cleanly:
+**One-line setup (recommended)**: open Terminal and paste this line. It prioritizes `/usr/local/bin` for [Node.js](https://nodejs.org/) 18+ (offering to install LTS with Homebrew if missing), downloads `install-context-capsule.js` and `context-capsule-payload.js` into `~/.gemini/tools/`, verifies Intel architecture compatibility, backs up the original `app.asar` and `Info.plist`, patches `Antigravity.app` atomically in ~20ms, updates `ElectronAsarIntegrity`, clears stale caches, performs local ad-hoc re-signing (`codesign`), and restarts Antigravity cleanly:
 
 ```bash
-curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch intel
+s="$(mktemp -t agy-pulse.XXXXXX)" && curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o "$s" && bash "$s" --arch intel; rm -f "$s"
 ```
 
-> If `/Applications/Antigravity.app` requires administrator write permission, Terminal will prompt for your macOS login password (`sudo`). For routine payload updates later, press `Cmd+Shift+P` and run `Developer: Reload Window` to hot-reload in ~1 second without restarting the app.
+> If `/Applications/Antigravity.app` requires administrator write permission, Terminal will prompt for your macOS login password (`sudo`). Append `--confirm` if you want a confirmation prompt before closing Antigravity. For routine payload updates later, press `Cmd+Shift+P` and run `Developer: Reload Window` to hot-reload in ~1 second without restarting the app.
 
 Check status in `< 5ms` (useful after silent Antigravity client updates):
 
 ```bash
-curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch intel --check
+s="$(mktemp -t agy-pulse.XXXXXX)" && curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o "$s" && bash "$s" --arch intel --check; rm -f "$s"
 ```
 
-Prefer clicking or offline install? Download `setup.command`, `setup.sh`, `install-context-capsule.js`, and `context-capsule-payload.js` from **[Releases](../../releases)** into one folder and double-click `setup.command` (it auto-detects chip architecture; on first launch, if macOS shows an unsigned-script warning, run `chmod +x setup.command` then right-click **Open** or allow it in System Settings, or run `bash setup.sh --offline --arch intel` in Terminal).
+Prefer offline or double-click install? Download `setup.command`, `setup.sh`, `install-context-capsule.js`, and `context-capsule-payload.js` from **[Releases](../../releases)** into one folder. Run `chmod +x setup.command setup.sh && xattr -c setup.command setup.sh` once in Terminal to enable double-clicking `setup.command`, or run `bash setup.sh --offline --arch intel` directly in Terminal.
 
 <details>
 <summary>Manual setup (if you'd rather not run the script)</summary>
@@ -150,45 +150,49 @@ Every desktop setup run on Windows or macOS also writes the browser version to `
 - **Chrome / Edge Extension (Recommended)**: open `chrome://extensions/` (or `edge://extensions/`), enable **Developer mode**, click **Load unpacked**, and select the `antigravity-pulse-web` folder.
 - **Tampermonkey**: Install `antigravity-pulse.user.js` from that folder into Tampermonkey. The userscript runs on Google-hosted Antigravity pages only; for a web client served from `localhost` / `127.0.0.1`, use the extension.
 
-> **Zero Noise Guarantee**: On non-Antigravity pages (Gmail, Google Search, Docs, YouTube, or unrelated `localhost` apps), the script exits immediately without hooking `fetch` or running background timers.
+> **Zero Noise Guarantee**: On non-Antigravity pages (Gmail, Google Search, Docs, YouTube, Cloud Console, or unrelated `localhost` apps), the script exits immediately without hooking `fetch` or running background timers.
 
-### 5. Uninstall
+### 5. Uninstall & Full Recovery
 
-Remove the hook and restore the original `preload.js` (Antigravity restarts):
+Restore the unpatched `app.asar` (and `Info.plist` on macOS) from `.orig.bak` backup — or strip the hook cleanly if no backup exists — clean up local Pulse files in `~/.gemini/tools/`, and restart Antigravity:
 
 **Windows (PowerShell):**
 
 ```powershell
-$s = "$env:TEMP\agy-pulse-setup.ps1"; Invoke-WebRequest "https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.ps1" -OutFile $s -UseBasicParsing; powershell -NoProfile -ExecutionPolicy Bypass -File $s -Action uninstall
+$s = "$env:TEMP\agy-pulse-setup.ps1"; Invoke-WebRequest "https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.ps1" -OutFile $s -UseBasicParsing; powershell -NoProfile -ExecutionPolicy Bypass -File "$s" -Action uninstall; Remove-Item $s -ErrorAction SilentlyContinue
 ```
 
 **macOS — Apple Silicon (Terminal):**
 
 ```bash
-curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch arm64 --uninstall
+s="$(mktemp -t agy-pulse.XXXXXX)" && curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o "$s" && bash "$s" --arch arm64 --uninstall; rm -f "$s"
 ```
 
 **macOS — Intel (Terminal):**
 
 ```bash
-curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch intel --uninstall
+s="$(mktemp -t agy-pulse.XXXXXX)" && curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o "$s" && bash "$s" --arch intel --uninstall; rm -f "$s"
 ```
 
-Or, with the files already in place: `node ~/.gemini/tools/install-context-capsule.js --uninstall` (`node "$HOME\.gemini\tools\install-context-capsule.js" --uninstall` in Windows PowerShell).
+Or, with the files already on disk (works completely offline): `node ~/.gemini/tools/install-context-capsule.js --uninstall --clean` (`node "$HOME\.gemini\tools\install-context-capsule.js" --uninstall --clean` in Windows PowerShell; omit `--clean` if you want to keep the `.js` files in `~/.gemini/tools/`).
 
 In the browser, remove the extension from `chrome://extensions/` (or `edge://extensions/`), or delete the script in Tampermonkey.
+
+> **macOS Signature Note**: Because Electron verifies `app.asar` integrity against the app bundle signature on macOS, patching applies a local ad-hoc `codesign` signature. Uninstalling restores the original `app.asar` and `Info.plist` so Antigravity launches normally, but cannot locally recreate Apple's original Developer ID certificate (which may affect built-in auto-updates or macOS TCC permission prompts). To restore the official vendor signature at any time, drag a fresh `Antigravity.app` from the official `.dmg` into `/Applications` — all chats, sign-in state, and settings in `~/Library/Application Support/Antigravity` remain untouched.
 
 ---
 
 ## Privacy & Security
 
-- **100% Local & Same-Origin**: Reads telemetry strictly from your own active Antigravity session in memory. Zero external network requests, zero analytics, zero telemetry servers.
-- **Surgical `~20ms` Patch & Local Signing**: Updates only `dist/preload.js` inside `app.asar` in memory while keeping all other 760+ application files untouched. On macOS, it only updates `ElectronAsarIntegrity` in `Contents/Info.plist` locally and invokes the built-in `codesign` tool for local ad-hoc re-signing (to satisfy Electron's signature verification) without uploading any data.
+- **100% Local & Same-Origin**: Reads telemetry strictly from your own active Antigravity session in memory, using pure DOM construction (no `innerHTML` or global Trusted Types overrides). Zero external network requests, zero analytics, zero telemetry servers.
+- **Atomic Backup & Surgical `~20ms` Patch**: Automatically saves a clean `.orig.bak` backup before modifying `dist/preload.js` inside `app.asar` via atomic temp-file rename, keeping all other 760+ application files untouched. On macOS, it updates `ElectronAsarIntegrity` in `Contents/Info.plist` locally and invokes the built-in `codesign` tool for local ad-hoc re-signing without uploading any data.
 
 ---
 
 ## License
 
-Copyright © 2026 Antigravity Pulse Authors. Release files are provided free for personal and developer use.
+Copyright © 2026 Antigravity Pulse Authors. All rights reserved.
+
+Release packages are provided free of charge for personal and individual developer use only. Redistribution, re-hosting, modified re-publishing, or commercial bundling without prior written permission is prohibited.
 
 Antigravity Pulse is an independent community project and is not affiliated with or endorsed by Google.
