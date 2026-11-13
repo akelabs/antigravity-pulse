@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://github.com/akelabs/antigravity-pulse/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/akelabs/antigravity-pulse?style=flat-square&label=release&labelColor=0B0B0F&color=3B82F6"></a>
-  <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%20%7C%20Web-0B0B0F?style=flat-square&labelColor=0B0B0F&color=5E9E8E">
+  <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20ARM64%20%7C%20macOS%20Intel%20%7C%20Web-0B0B0F?style=flat-square&labelColor=0B0B0F&color=5E9E8E">
   <img alt="Node.js 18+" src="https://img.shields.io/badge/Node.js-18%2B-0B0B0F?style=flat-square&labelColor=0B0B0F&color=C6A265">
   <img alt="Zero dependencies" src="https://img.shields.io/badge/dependencies-0-0B0B0F?style=flat-square&labelColor=0B0B0F&color=C26C77">
 </p>
@@ -79,24 +79,102 @@ node "$HOME\.gemini\tools\install-context-capsule.js" --check    # status
 
 </details>
 
-### 2. Browser Web Client (Chrome / Edge / Tampermonkey)
+### 2. Desktop Client (macOS — Apple Silicon: M1 / M2 / M3 / M4 · ARM64)
 
-Every desktop setup run also writes the browser version to `%USERPROFILE%\.gemini\tools\antigravity-pulse-web\`. Only need the web version? Run the setup line with `-Action web` on Windows, or on macOS / Linux run `bash setup.sh` from **[Releases](../../releases)** (needs Node.js 18+; it writes to `~/.gemini/tools/antigravity-pulse-web/`).
+**One-line setup (recommended)**: open Terminal and paste this line. If your shell is running under Rosetta 2, it automatically switches back to native `arm64`, prioritizes `/opt/homebrew/bin` for [Node.js](https://nodejs.org/) 18+ (offering to install LTS with Homebrew if missing), downloads `install-context-capsule.js` and `context-capsule-payload.js` into `~/.gemini/tools/`, verifies Apple Silicon architecture compatibility, patches `Antigravity.app` in memory in ~20ms, updates `ElectronAsarIntegrity` in `Contents/Info.plist`, clears stale caches, performs local ARM64 ad-hoc re-signing (`codesign`), and restarts Antigravity cleanly:
+
+```bash
+curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch arm64
+```
+
+> If `/Applications/Antigravity.app` requires administrator write permission, Terminal will prompt for your macOS login password (`sudo`). For routine payload updates later, press `Cmd+Shift+P` and run `Developer: Reload Window` to hot-reload in ~1 second without restarting the app.
+
+Check status in `< 5ms` (useful after silent Antigravity client updates):
+
+```bash
+curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch arm64 --check
+```
+
+Prefer clicking or offline install? Download `setup.command`, `setup.sh`, `install-context-capsule.js`, and `context-capsule-payload.js` from **[Releases](../../releases)** into one folder and double-click `setup.command` (it auto-detects chip architecture; on first launch, if macOS shows an unsigned-script warning, run `chmod +x setup.command` then right-click **Open** or allow it in System Settings, or run `bash setup.sh --offline --arch arm64` in Terminal).
+
+<details>
+<summary>Manual setup (if you'd rather not run the script)</summary>
+
+1. Install [Node.js](https://nodejs.org/) LTS (18 or newer), or run `/opt/homebrew/bin/brew install node`. Open a new Terminal window and check with `node --version`.
+2. Create `~/.gemini/tools/` and put `install-context-capsule.js` and `context-capsule-payload.js` from **[Releases](../../releases)** in it.
+3. Run:
+
+```bash
+node ~/.gemini/tools/install-context-capsule.js --arch arm64            # install or update
+node ~/.gemini/tools/install-context-capsule.js --arch arm64 --check    # status
+```
+
+</details>
+
+### 3. Desktop Client (macOS — Intel x86_64)
+
+**One-line setup (recommended)**: open Terminal and paste this line. It prioritizes `/usr/local/bin` for [Node.js](https://nodejs.org/) 18+ (offering to install LTS with Homebrew if missing), downloads `install-context-capsule.js` and `context-capsule-payload.js` into `~/.gemini/tools/`, verifies Intel architecture compatibility, patches `Antigravity.app` in memory in ~20ms, updates `ElectronAsarIntegrity` in `Contents/Info.plist`, clears stale caches, performs local ad-hoc re-signing (`codesign`), and restarts Antigravity cleanly:
+
+```bash
+curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch intel
+```
+
+> If `/Applications/Antigravity.app` requires administrator write permission, Terminal will prompt for your macOS login password (`sudo`). For routine payload updates later, press `Cmd+Shift+P` and run `Developer: Reload Window` to hot-reload in ~1 second without restarting the app.
+
+Check status in `< 5ms` (useful after silent Antigravity client updates):
+
+```bash
+curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch intel --check
+```
+
+Prefer clicking or offline install? Download `setup.command`, `setup.sh`, `install-context-capsule.js`, and `context-capsule-payload.js` from **[Releases](../../releases)** into one folder and double-click `setup.command` (it auto-detects chip architecture; on first launch, if macOS shows an unsigned-script warning, run `chmod +x setup.command` then right-click **Open** or allow it in System Settings, or run `bash setup.sh --offline --arch intel` in Terminal).
+
+<details>
+<summary>Manual setup (if you'd rather not run the script)</summary>
+
+1. Install [Node.js](https://nodejs.org/) LTS (18 or newer), or run `/usr/local/bin/brew install node`. Open a new Terminal window and check with `node --version`.
+2. Create `~/.gemini/tools/` and put `install-context-capsule.js` and `context-capsule-payload.js` from **[Releases](../../releases)** in it.
+3. Run:
+
+```bash
+node ~/.gemini/tools/install-context-capsule.js --arch intel            # install or update
+node ~/.gemini/tools/install-context-capsule.js --arch intel --check    # status
+```
+
+</details>
+
+### 4. Browser Web Client (Chrome / Edge / Tampermonkey)
+
+Every desktop setup run on Windows or macOS also writes the browser version to `~/.gemini/tools/antigravity-pulse-web/` (`%USERPROFILE%\.gemini\tools\antigravity-pulse-web\` on Windows). Only need the web version (including Linux)? Append `-Action web` on Windows, or on macOS / Linux run `bash setup.sh --web` (needs Node.js 18+ and exports to `~/.gemini/tools/antigravity-pulse-web/`).
 
 - **Chrome / Edge Extension (Recommended)**: open `chrome://extensions/` (or `edge://extensions/`), enable **Developer mode**, click **Load unpacked**, and select the `antigravity-pulse-web` folder.
 - **Tampermonkey**: Install `antigravity-pulse.user.js` from that folder into Tampermonkey. The userscript runs on Google-hosted Antigravity pages only; for a web client served from `localhost` / `127.0.0.1`, use the extension.
 
 > **Zero Noise Guarantee**: On non-Antigravity pages (Gmail, Google Search, Docs, YouTube, or unrelated `localhost` apps), the script exits immediately without hooking `fetch` or running background timers.
 
-### 3. Uninstall
+### 5. Uninstall
 
 Remove the hook and restore the original `preload.js` (Antigravity restarts):
+
+**Windows (PowerShell):**
 
 ```powershell
 $s = "$env:TEMP\agy-pulse-setup.ps1"; Invoke-WebRequest "https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.ps1" -OutFile $s -UseBasicParsing; powershell -NoProfile -ExecutionPolicy Bypass -File $s -Action uninstall
 ```
 
-Or, with the files already in place: `node "$HOME\.gemini\tools\install-context-capsule.js" --uninstall`.
+**macOS — Apple Silicon (Terminal):**
+
+```bash
+curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch arm64 --uninstall
+```
+
+**macOS — Intel (Terminal):**
+
+```bash
+curl -fsSL https://github.com/akelabs/antigravity-pulse/releases/latest/download/setup.sh -o /tmp/agy-pulse-setup.sh && bash /tmp/agy-pulse-setup.sh --arch intel --uninstall
+```
+
+Or, with the files already in place: `node ~/.gemini/tools/install-context-capsule.js --uninstall` (`node "$HOME\.gemini\tools\install-context-capsule.js" --uninstall` in Windows PowerShell).
 
 In the browser, remove the extension from `chrome://extensions/` (or `edge://extensions/`), or delete the script in Tampermonkey.
 
@@ -105,7 +183,7 @@ In the browser, remove the extension from `chrome://extensions/` (or `edge://ext
 ## Privacy & Security
 
 - **100% Local & Same-Origin**: Reads telemetry strictly from your own active Antigravity session in memory. Zero external network requests, zero analytics, zero telemetry servers.
-- **Surgical `~20ms` Patch**: Updates only `dist/preload.js` inside `app.asar` in memory while keeping all other 760+ application files untouched.
+- **Surgical `~20ms` Patch & Local Signing**: Updates only `dist/preload.js` inside `app.asar` in memory while keeping all other 760+ application files untouched. On macOS, it only updates `ElectronAsarIntegrity` in `Contents/Info.plist` locally and invokes the built-in `codesign` tool for local ad-hoc re-signing (to satisfy Electron's signature verification) without uploading any data.
 
 ---
 
